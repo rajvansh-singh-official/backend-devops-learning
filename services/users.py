@@ -1,4 +1,6 @@
 from pydantic import BaseModel, EmailStr
+from database import SessionLocal
+from models.user import User
 
 users = []
 
@@ -10,12 +12,22 @@ def get_users():
     return users
 
 def create_user(user: UserCreate):
-    new_user = {
-        "id": len(users) + 1,
-        "name": user.name
-    }
-    users.append(new_user)
-    return new_user
+    db = SessionLocal()
+
+    try:
+        db_user = User(
+            name=user.name,
+            email=user.email
+        )
+
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+
+        return db_user
+
+    finally:
+        db.close()
 
 def get_user_by_id(user_id: int):
     for user in users:
