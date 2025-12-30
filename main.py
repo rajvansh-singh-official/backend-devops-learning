@@ -12,6 +12,11 @@ from services.users import (
   delete_user
 )
 
+from database import engine, Base
+from models.user import User
+
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 
 @app.get("/")
