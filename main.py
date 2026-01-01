@@ -1,8 +1,4 @@
 from fastapi import FastAPI, HTTPException
-from typing import Optional
-
-from services.greetings import generate_greeting 
-from services.health import health_status
 from services.users import (
   get_users,
   create_user, 
@@ -11,9 +7,7 @@ from services.users import (
   update_user, 
   delete_user
 )
-
 from schemas.users import UserResponse
-
 from database import engine, Base
 from models.user import User
 
@@ -23,15 +17,11 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-  return{"message": "Backend is running"}
+  return{"message": "API running"}
 
 @app.get("/health")
 def health_check():
-  return health_status()
-
-@app.get("/hello/{name}")
-def say_hello(name: str, age: Optional[int] = None):
-  return generate_greeting(name, age)
+  return {"status": "ok"}
 
 @app.get("/users", response_model=list[UserResponse])
 def list_users():
