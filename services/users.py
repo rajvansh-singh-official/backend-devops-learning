@@ -9,7 +9,13 @@ class UserCreate(BaseModel):
     email: EmailStr
 
 def get_users():
-    return users
+    db = SessionLocal()
+    
+    try:
+        return db.query(User).all()
+    
+    finally:
+        db.close()
 
 def create_user(user: UserCreate):
     db = SessionLocal()
