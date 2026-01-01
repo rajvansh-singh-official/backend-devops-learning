@@ -2,8 +2,6 @@ from pydantic import BaseModel, EmailStr
 from database import SessionLocal
 from models.user import User
 
-users = []
-
 class UserCreate(BaseModel):
     name: str
     email: EmailStr
