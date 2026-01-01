@@ -36,10 +36,13 @@ def create_user(user: UserCreate):
         db.close()
 
 def get_user_by_id(user_id: int):
-    for user in users:
-        if user["id"] == user_id:
-            return user
-    return None
+    db = SessionLocal()
+    
+    try:
+        return db.query(User).filter(User.id == user_id).first()
+    
+    finally:
+        db.close()
 
 def update_user(user_id: int, name: str | None = None, email: str | None = None):
     for user in users:
