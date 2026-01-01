@@ -12,6 +12,8 @@ from services.users import (
   delete_user
 )
 
+from schemas.users import UserResponse
+
 from database import engine, Base
 from models.user import User
 
@@ -31,22 +33,22 @@ def health_check():
 def say_hello(name: str, age: Optional[int] = None):
   return generate_greeting(name, age)
 
-@app.get("/users")
+@app.get("/users", response_model=list[UserResponse])
 def list_users():
     return get_users()
 
-@app.post("/users")
+@app.post("/users", response_model=UserResponse)
 def add_user(user: UserCreate):
     return create_user(user)
 
-@app.get("/users/{user_id}")
+@app.get("/users/{user_id}", response_model=UserResponse)
 def get_user(user_id: int):
     user = get_user_by_id(user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@app.patch("/users/{user_id}")
+@app.patch("/users/{user_id}", response_model=UserResponse)
 def update_user_route(
     user_id: int,
     name: Optional[str] = None,
@@ -57,7 +59,7 @@ def update_user_route(
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@app.delete("/users/{user_id}")
+@app.delete("/users/{user_id}", response_model=UserResponse)
 def delete_user_route(user_id: int):
     user = delete_user(user_id)
     if user is None:
