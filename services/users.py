@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from database import SessionLocal
 from models.user import User
+from sqlalchemy.exc import IntegrityError
 
 class UserCreate(BaseModel):
     name: str
@@ -29,6 +30,10 @@ def create_user(user: UserCreate):
         db.refresh(db_user)
 
         return db_user
+    
+    except IntegrityError:
+        db.rollback()
+        return None
 
     finally:
         db.close()

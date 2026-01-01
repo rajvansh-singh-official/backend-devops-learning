@@ -39,7 +39,10 @@ def list_users():
 
 @app.post("/users", response_model=UserResponse)
 def add_user(user: UserCreate):
-    return create_user(user)
+    created_user = create_user(user)
+    if created_user is None:
+        raise HTTPException(status_code=409, detail="Email already exists")
+    return created_user
 
 @app.get("/users/{user_id}", response_model=UserResponse)
 def get_user(user_id: int):
